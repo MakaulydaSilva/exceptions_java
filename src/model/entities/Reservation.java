@@ -1,5 +1,6 @@
 package model.entities;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
@@ -40,15 +41,29 @@ public class Reservation {
 																	// para dias
 	}
 
-	public void updateDates(Date checkIn, Date checkOut) {
+	public String updateDates(Date checkIn, Date checkOut) throws ParseException {
+
+		Date now = sdf.parse("06/06/2018");
+
+		if (checkIn.before(now) || checkOut.before(now)) {
+			return "Reservation dates for update must be future dates";
+
+		}
+
+		if (!checkOut.after(checkIn)) {
+			return "Check-out date must be after check-in date";
+		}
+
 		this.checkIn = checkIn;
 		this.checkOut = checkOut;
+
+		return null; // Se retornar nulo é porque não ocorreu nenhum erro;
 	}
 
 	@Override
 	public String toString() {
-		return "Romm " + roomNumber + ", check-in: " + sdf.format(checkIn) + ", check-out: "
-	            + sdf.format(checkOut) + ", " + duration() + " nights";
+		return "Romm " + roomNumber + ", check-in: " + sdf.format(checkIn) + ", check-out: " + sdf.format(checkOut)
+				+ ", " + duration() + " nights";
 	}
 
 }
